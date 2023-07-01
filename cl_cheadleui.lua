@@ -292,7 +292,7 @@ function CheadleUI.Checkbox(panel, text, font, bgColor, markedColor, textColor)
         checkPanel.checked = !checkPanel.checked
         bgPanel:OnChange(checkPanel.checked)
 
-        CheadleUI.PlaySound(checkPanel.checked and "sound/cheadlepurge/check.mp3" or "sound/cheadlepurge/uncheck.mp3")
+        --CheadleUI.PlaySound(checkPanel.checked and "sound/cheadlepurge/check.mp3" or "sound/cheadlepurge/uncheck.mp3")
     end
 
     bgPanel.SetValue = function(s, value)
@@ -307,7 +307,7 @@ function CheadleUI.Checkbox(panel, text, font, bgColor, markedColor, textColor)
 end
 
 function CheadleUI.PlaySound(soundName)
-    if Purge.Preferences["UI Sound"] then
+    --if Purge.Preferences["UI Sound"] then
         sound.PlayFile(soundName, "", function() end)
-    end
+    --end
 end
