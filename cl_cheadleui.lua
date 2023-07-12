@@ -292,7 +292,7 @@ function CheadleUI.Checkbox(panel, text, font, bgColor, markedColor, textColor)
         checkPanel.checked = !checkPanel.checked
         bgPanel:OnChange(checkPanel.checked)
 
-        --CheadleUI.PlaySound(checkPanel.checked and "sound/cheadlepurge/check.mp3" or "sound/cheadlepurge/uncheck.mp3")
+        CheadleUI.PlaySound(checkPanel.checked and "sound/cheadlepurge/check.mp3" or "sound/cheadlepurge/uncheck.mp3")
     end
 
     bgPanel.SetValue = function(s, value)
@@ -306,8 +306,70 @@ function CheadleUI.Checkbox(panel, text, font, bgColor, markedColor, textColor)
     return bgPanel
 end
 
+function CheadleUI.Slider(panel, text, font, min, max, width, color)
+    local con = CheadleUI.Panel(panel, Color(0, 0, 0, 0)) //vgui.Create("EditablePanel", panel)
+    CheadleUI.SetW(con, width)
+    con:SetTall(30)
+
+    local slider = vgui.Create("DNumSlider", con)
+    slider:SetText(text)
+    slider.Label:SetFont(font)
+    slider.Label:SetColor(color)
+    slider:SetMin(min)
+    slider:SetMax(max)
+    slider:SetDecimals(0)
+    CheadleUI.SetW(slider, 100)
+    
+    con.OnValueChanged = function() end
+    slider.OnValueChanged = function(s, value)
+        con:OnValueChanged(value)
+    end
+
+    con.SetValue = function(s, value)
+        slider:SetValue(value)
+    end
+
+    return con
+end
+
+function CheadleUI.Popup(panel, text, font, bgColor, textColor)
+    if type(text) == "function" then
+        panel.popupDraw = text
+        return
+    end
+
+    panel.popupText = text
+    panel.popupFont = font
+    panel.popupColor = bgColor
+    panel.popupTextColor = textColor
+end
+
+hook.Add("DrawOverlay", "CheadleUI_Popups", function()
+    local hovered = vgui.GetHoveredPanel()
+    if not IsValid(hovered) then return end
+
+    if hovered.popupDraw then
+        local x, y = input.GetCursorPos()
+        hovered.popupDraw(x, y)
+        return
+    end
+
+    local text = hovered.popupText
+    local bgColor = hovered.popupColor
+    local textColor = hovered.popupTextColor
+    if text then
+        local font = hovered.popupFont
+        surface.SetFont(font)
+
+        local w, h = surface.GetTextSize(text)
+        local x, y = input.GetCursorPos()
+        draw.RoundedBox(4, x, y, w + 20, h+5, bgColor)
+        draw.SimpleText(text, font, x + w/2 + 15, y + (h+5)/2, textColor, 1, 1)
+    end
+end)
+
 function CheadleUI.PlaySound(soundName)
-    --if Purge.Preferences["UI Sound"] then
+    if Purge.Preferences["UI Sound"] then
         sound.PlayFile(soundName, "", function() end)
-    --end
+    end
 end
