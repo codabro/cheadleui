@@ -31,11 +31,11 @@ function CheadleUI.CreateFont(face, size)
         weight = 500,
         antialias = true,
     })
-    CheadleUI.Fonts[size] = true
+    CheadleUI.Fonts[face .. size] = true
 end
 
 function CheadleUI.GetFont(face, size)
-    if not CheadleUI.Fonts[size] then
+    if not CheadleUI.Fonts[face .. size] then
         CheadleUI.CreateFont(face, size)
     end
     return "CheadleUI_" .. face .. size
